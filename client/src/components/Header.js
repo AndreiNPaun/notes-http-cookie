@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeToken } from '../store/action/login';
+import { unsetAuthentication } from '../store/action/login';
 
 import HeaderStyle from './UI/HeaderStyle';
 
@@ -16,7 +16,7 @@ const Header = () => {
 
   // unsets the token if logout option is present on header and clicked on and redirects back home
   const logoutToken = () => {
-    dispatch(removeToken());
+    dispatch(unsetAuthentication());
 
     window.location.reload(false);
   };

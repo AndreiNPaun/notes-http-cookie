@@ -23,8 +23,7 @@ const Login = () => {
 
   // get tokens from url if they exist
   const urlParams = new URLSearchParams(window.location.search);
-  const token = urlParams.get('token');
-  const refreshToken = urlParams.get('refreshToken');
+  const success = urlParams.get('success');
 
   const loginHandler = async (event) => {
     event.preventDefault();
@@ -82,7 +81,7 @@ const Login = () => {
           <Button type="submit">Login</Button>
         </Center>
         <Center m="0.3rem">
-          <GoogleAuth token={token} refreshToken={refreshToken} />
+          <GoogleAuth success={success} />
         </Center>
       </form>
     </Card>

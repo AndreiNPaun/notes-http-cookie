@@ -4,25 +4,25 @@ import { FcGoogle } from 'react-icons/fc';
 import { Link, Button } from '@chakra-ui/react';
 
 import { useDispatch } from 'react-redux';
-import { setTokenFromURL } from '../../../store/action/login';
+import { setLoginFromURL } from '../../../store/action/login';
 import { useNavigate } from 'react-router-dom';
 
 const GoogleAuth = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const getTokensFromUrl = () => {
-    const token = props.token;
-    const refreshToken = props.refreshToken;
+  const getSuccessFromURL = () => {
+    const success = props.success;
+    console.log(success);
 
-    if (token && refreshToken) {
-      dispatch(setTokenFromURL({ token, refreshToken }));
+    if (success) {
+      dispatch(setLoginFromURL({ success }));
       navigate('/');
     }
   };
 
   useEffect(() => {
-    getTokensFromUrl();
+    getSuccessFromURL();
   }, []);
 
   return (

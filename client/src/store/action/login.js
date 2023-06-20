@@ -3,16 +3,11 @@ import UseHttp from '../../hooks/useHttp';
 
 import { loginActions } from '../slice/login';
 
+// post request with user details and store boolean value in cookie
 export const setLogin = (user, url) => {
   return async (dispatch) => {
     try {
       const response = await UseHttp({ method: 'post', url, values: user });
-
-      // const response = await UseHttp({
-      //   method: 'get',
-      //   url: 'http://localhost:8000/api/logging-in',
-      // });
-      console.log('validation resp:', response);
 
       Cookies.set('Authenticated', response);
 
@@ -24,28 +19,33 @@ export const setLogin = (user, url) => {
   };
 };
 
-export const setTokenFromURL = ({ token, refreshToken }) => {
+// store boolean value in cookie
+export const setLoginFromURL = (success) => {
   return (dispatch) => {
-    // try {
-    //   // sets the cookie to expire in 2h
-    //   const expireTwoHours = 2 / 24;
-    //   cookie.set('token', token, { expires: expireTwoHours });
-    //   cookie.set('refreshToken', refreshToken, { expires: expireTwoHours });
-    //   // update store token
-    //   dispatch(loginActions.login({ token }));
-    // } catch (error) {
-    //   throw error;
-    // }
+    try {
+      Cookies.set('Authenticated', success.success);
+
+      // update authentication slice
+      dispatch(loginActions.login({ loginCheck: success.success }));
+    } catch (error) {
+      throw error;
+    }
   };
 };
 
-export const removeToken = () => {
-  return (dispatch) => {
+export const unsetAuthentication = () => {
+  return async (dispatch) => {
     try {
       Cookies.remove('Authenticated');
 
       // update store token
       dispatch(loginActions.logout());
+
+      // post request will remove cookie stored tokens
+      await UseHttp({
+        method: 'post',
+        url: 'http://localhost:8000/api/unset-token',
+      });
     } catch (error) {
       throw error;
     }

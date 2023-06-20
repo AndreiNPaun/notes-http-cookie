@@ -43,6 +43,7 @@ router.get(
   (req, res) => {
     const token = req.user.token;
     const refreshToken = req.user.refreshToken;
+
     req.user
       ? res
           .status(302)
@@ -56,13 +57,13 @@ router.get(
             secure: false,
             sameSite: 'Strict',
           })
-          .redirect('http://localhost:3000/')
-          .json({ message: 'Login Successful!' })
-      : res
-          .status(401)
-          .redirect('http://localhost:3000/login')
-          .json({ message: 'Login failed.' });
+          .redirect('http://localhost:3000/login/?success=true')
+      : res.status(401).redirect('http://localhost:3000/login');
   }
 );
+
+router.post('/unset-token', (req, res) => {
+  res.clearCookie('token').clearCookie('refreshToken').send('Cookies cleared');
+});
 
 module.exports = router;
