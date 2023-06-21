@@ -26,8 +26,18 @@ export const fetchNotes = createAsyncThunk(
 
       dispatch(noteActions.addNote(loadedNotes));
     } catch (error) {
-      dispatch(noteActions.setError(error.message));
-      return false;
+      // if there is an authentication status error, attempt to refresh token
+      if (error.response.status === 401) {
+        await useHttp({
+          method: 'post',
+          url: 'http://localhost:8000/api/refresh-token',
+        });
+        dispatch(fetchNotes());
+      } else {
+        // store error message in redux and display for user to see
+        dispatch(noteActions.setError(error.message));
+        return false;
+      }
     }
 
     dispatch(noteActions.loading(false));
@@ -50,7 +60,6 @@ export const submitNote = createAsyncThunk(
       };
       dispatch(noteActions.addNote(noteData));
     } catch (error) {
-      console.error('Error:', error);
       dispatch(noteActions.setError(error.message));
     }
   }

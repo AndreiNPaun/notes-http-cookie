@@ -59,12 +59,10 @@ const login = async (req, res, next) => {
       return res.status(422).json({ error: 'Wrong password.' });
     }
 
-    const isLoggedIn = true;
-
     const token = jwt.sign(
       { email: user.email, id: user._id },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME }
+      { expiresIn: '10s' }
     );
 
     const refreshToken = jwt.sign(
@@ -92,20 +90,24 @@ const login = async (req, res, next) => {
 };
 
 const refreshToken = (req, res, next) => {
-  console.log('pplm', req.body.refreshToken);
   try {
-    const refreshToken = req.body.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
     const verify = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const token = jwt.sign(
       { email: verify.email, id: verify._id },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: process.env.ACCESS_TOKEN_EXPIRE_TIME }
+      { expiresIn: '10s' }
     );
-    res.json({
-      message: 'Token refreshed successfully',
-      token,
-      refreshToken,
-    });
+
+    console.log(token);
+
+    res
+      .cookie('token', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Strict',
+      })
+      .json({ message: 'Token refreshed.' });
   } catch (error) {
     res.status(400).json({
       error: `An error has occured: ${error}`,
