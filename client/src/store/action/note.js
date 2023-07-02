@@ -1,11 +1,17 @@
 import { noteActions } from '../slice/note';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+// part of the demo
+import Cookies from 'js-cookie';
+
 import useHttp from '../../hooks/useHttp';
 
 export const fetchNotes = createAsyncThunk(
   'note/fetchNotes',
   async (_, { dispatch }) => {
+    const tokenTest = Cookies.get('token');
+    console.log('Token from cookie', tokenTest);
+
     dispatch(noteActions.loading(true));
     try {
       const loadedNotes = [];
