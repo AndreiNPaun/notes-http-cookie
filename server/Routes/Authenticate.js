@@ -20,6 +20,7 @@ router.post(
   ],
   AuthController.register
 );
+
 router.post(
   '/login',
   [

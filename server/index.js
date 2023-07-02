@@ -1,4 +1,6 @@
 const express = require('express');
+const https = require('https');
+const fs = require('fs');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -46,6 +48,19 @@ app.use(
 app.use(passport.initialize());
 
 const PORT = process.env.PORT || 8000;
+
+// // Read the SSL/TLS certificate files
+// const options = {
+//   key: fs.readFileSync('../certificates/key.pem'),
+//   cert: fs.readFileSync('../certificates/cert.pem'),
+// };
+
+// // Create the HTTPS server
+// const server = https.createServer(options, app);
+
+// server.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}.`);
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);

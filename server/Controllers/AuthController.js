@@ -59,8 +59,6 @@ const login = async (req, res, next) => {
       return res.status(422).json({ error: 'Wrong password.' });
     }
 
-    const isLoggedIn = true;
-
     const token = jwt.sign(
       { email: user.email, id: user._id },
       process.env.ACCESS_TOKEN_SECRET,
@@ -92,7 +90,6 @@ const login = async (req, res, next) => {
 };
 
 const refreshToken = (req, res, next) => {
-  console.log('pplm', req.body.refreshToken);
   try {
     const refreshToken = req.body.refreshToken;
     const verify = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
